@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK21'
+        maven 'Maven3'
+    }
+
+    stages {
+        stage('Checkout code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ilef-allemnii/country-service-2'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+}
