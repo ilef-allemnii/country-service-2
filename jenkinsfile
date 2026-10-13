@@ -7,22 +7,48 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout code') {
             steps {
-                git branch: 'main', url: 'https://github.com/ilef-allemnii/country-service-2'
+                checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Compile code') {
             steps {
-                sh 'pwd'
+                sh 'mvn clean compile'
             }
         }
-        stage('Display Message') {
-                    steps {
-                        echo 'HI ILEF'
-                    }
-                }
 
+        stage('Test code') {
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package code') {
+            steps {
+                sh 'mvn package -DskipTests'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI pipeline finished successfully.'
+        }
+        failure {
+            echo 'CI pipeline failed. Check the console output.'
+        }
     }
 }
