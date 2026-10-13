@@ -20,7 +20,7 @@ pipeline {
         }
         stage('Display Message') {
                     steps {
-                        echo 'HELLO ILEF'
+                        echo 'HI ILEF'
                     }
                 }
 
