@@ -18,5 +18,11 @@ pipeline {
                 sh 'pwd'
             }
         }
+        stage('Display Message') {
+                    steps {
+                        echo 'HELLO ILEF'
+                    }
+                }
+
     }
 }
