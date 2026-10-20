@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  country-service-1:
+    image: country-service-2:v1
+    container_name: country-service-instance-1
+    ports:
+      - "8082:8082"
+    restart: unless-stopped
+
+  country-service-2:
+    image: country-service-2:v1
+    container_name: country-service-instance-2
+    ports:
+      - "8083:8082"
+    restart: unless-stopped
