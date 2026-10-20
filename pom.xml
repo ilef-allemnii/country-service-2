@@ -148,6 +148,29 @@
         </execution>
     </executions>
 </plugin>
+			<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>build-helper-maven-plugin</artifactId>
+    <version>3.6.0</version>
+    <executions>
+        <execution>
+            <id>attach-reports</id>
+            <phase>package</phase>
+            <goals>
+                <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+                <artifacts>
+                    <artifact>
+                        <file>${project.build.directory}/site/jacoco/jacoco.csv</file>
+                        <type>csv</type>
+                        <classifier>jacoco-report</classifier>
+                    </artifact>
+                </artifacts>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
 		</plugins>
 	</build>
 <distributionManagement>
