@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Maven Project') {
+            steps {
+                sh './mvnw clean package -DskipTests'
+            }
+        }
+
+        stage('Build Dockerfile') {
+            steps {
+                sh 'docker build . -t country-service-2:$BUILD_NUMBER'
+                withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
+                    sh 'docker login -u ilefsworld -p ${dockerhubpwd}'
+                }
+                sh 'docker tag country-service-2:$BUILD_NUMBER ilefsworld/country-service-2:$BUILD_NUMBER'
+                sh 'docker push ilefsworld/country-service-2:$BUILD_NUMBER'
+            }
+        }
+
+        stage('Deploy micro-service') {
+            steps {
+                // Safely remove any previous container of this specific service without touching Portainer/Nexus/SonarQube
+                sh 'docker rm -f country-service || true'
+                sh 'docker run -d --name country-service -p 8082:8082 ilefsworld/country-service-2:$BUILD_NUMBER'
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker logout'
+        }
+    }
+}
