@@ -166,6 +166,11 @@
                         <type>csv</type>
                         <classifier>jacoco-report</classifier>
                     </artifact>
+                    <artifact>
+                        <file>${project.build.directory}/surefire-reports/TEST-com.countryservice.demo.CountryService2ApplicationTests.xml</file>
+                        <type>xml</type>
+                        <classifier>surefire-report</classifier>
+                    </artifact>
                 </artifacts>
             </configuration>
         </execution>
