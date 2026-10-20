@@ -27,12 +27,14 @@ pipeline {
 
         stage('Deploy micro-service') {
             steps {
-                // Safely remove any previous container of this specific service without touching Portainer/Nexus/SonarQube
+                // Free port 8082 by removing whichever container currently binds to it
+                sh 'docker rm -f $(docker ps -q --filter publish=8082) || true'
+                // Remove any leftover container specifically named country-service
                 sh 'docker rm -f country-service || true'
+                // Launch the new version
                 sh 'docker run -d --name country-service -p 8082:8082 ilefsworld/country-service-2:$BUILD_NUMBER'
             }
-        }
-    }
+        }    }
 
     post {
         always {
